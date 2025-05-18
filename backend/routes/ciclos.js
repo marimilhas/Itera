@@ -7,29 +7,18 @@ const auth = require("../middleware/auth");
 router.get("/api/ciclos", async function (req, res) {
     let where = {};
 
-    // Filtrado opcional por idProyecto, plan, etc.
+    // Filtrado opcional por idProyecto
     if (req.query.idProyecto != undefined && req.query.idProyecto !== "") {
         where.idProyecto = req.query.idProyecto;
     }
-    if (req.query.plan != undefined && req.query.plan !== "") {
-        where.plan = { [Op.like]: "%" + req.query.plan + "%" };
-    }
-    if (req.query.do != undefined && req.query.do !== "") {
-        where.do = { [Op.like]: "%" + req.query.do + "%" };
-    }
-    if (req.query.check != undefined && req.query.check !== "") {
-        where.check = { [Op.like]: "%" + req.query.check + "%" };
-    }
-    if (req.query.act != undefined && req.query.act !== "") {
-        where.act = { [Op.like]: "%" + req.query.act + "%" };
-    }
+    
     if (req.query.activo != undefined && req.query.activo !== "") {
         where.activo = req.query.activo === "true";
     }
 
     if (!req.query.pagina) {
         const { count, rows } = await db.Ciclo.findAndCountAll({
-            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "fechaCreacion", "activo"],
+            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "activo", "numeroCiclo"],
             order: [["id", "ASC"]],
             where
         });
@@ -39,7 +28,7 @@ router.get("/api/ciclos", async function (req, res) {
     const pagina = parseInt(req.query.pagina);
     const tamañoPagina = 10;
     const { count, rows } = await db.Ciclo.findAndCountAll({
-        attributes: ["id", "idProyecto", "plan", "do", "check", "act", "fechaCreacion", "activo"],
+        attributes: ["id", "idProyecto", "plan", "do", "check", "act", "activo", "numeroCiclo"],
         order: [["id", "ASC"]],
         where,
         offset: (pagina - 1) * tamañoPagina,
@@ -57,7 +46,7 @@ router.get("/api/ciclos/:id", auth.authenticateJWT, async function (req, res) {
 
     try {
         let data = await db.Ciclo.findOne({
-            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "fechaCreacion", "activo"],
+            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "activo", "numeroCiclo"],
             where: { id: req.params.id },
         });
 
@@ -111,7 +100,7 @@ router.put("/api/ciclos/:id", auth.authenticateJWT, async (req, res) => {
 
     try {
         let data = await db.Ciclo.findOne({
-            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "fechaCreacion", "activo"],
+            attributes: ["id", "idProyecto", "plan", "do", "check", "act", "activo", "numeroCiclo"],
             where: { id: req.params.id },
         });
 
@@ -121,6 +110,7 @@ router.put("/api/ciclos/:id", auth.authenticateJWT, async (req, res) => {
         }
 
         data.idProyecto = req.body.idProyecto;
+        data.numeroCiclo = req.body.numeroCiclo;
         data.plan = req.body.plan;
         data.do = req.body.do;
         data.check = req.body.check;
@@ -149,19 +139,28 @@ router.delete("/api/ciclos/:id", auth.authenticateJWT, async (req, res) => {
         return res.status(403).json({ message: "Usuario no autorizado" });
     }
 
-    try {
-        let filasBorradas = await db.Ciclo.destroy({
-            where: { id: req.params.id },
-        });
+    const { id } = req.params;
+    const bajaFisica = req.query.bajaFisica === "true";
 
-        if (filasBorradas == 1) {
-            res.status(200).json({ message: "Ciclo eliminado correctamente" });
-        } else {
-            res.status(404).json({ message: "Ciclo no encontrado" });
+    try {
+        const ciclo = await db.Ciclo.findOne({ where: { id } });
+
+        if (!ciclo) {
+            return res.status(404).json({ message: "Ciclo no encontrado" });
         }
 
+        if (bajaFisica) {
+            await ciclo.destroy();
+            return res.status(200).json({ message: "Ciclo eliminado físicamente" });
+        } else {
+            // Alternar valor de activo
+            ciclo.activo = !ciclo.activo;
+            await ciclo.save();
+            const estado = ciclo.activo ? "activado" : "desactivado";
+            return res.status(200).json({ message: `Ciclo ${estado} correctamente` });
+        }
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 });
 

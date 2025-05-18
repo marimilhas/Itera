@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 
 function Pdca() {
     return (
-        <div className="p-8 max-w-4xl mx-auto text-gray-800 bg-white rounded-xl shadow">
-            <h1 className="text-3xl font-bold mb-6 border-b pb-2 text-blue-800">Ciclo PDCA (Plan - Do - Check - Act)</h1>
+        <div className="p-8 max-w-4xl mx-auto text-gray-800 bg-white">
+            <h1 className="tituloPagina">Ciclo PDCA (Plan - Do - Check - Act)</h1>
 
             <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-blue-700">Nombre de la técnica</h2>
+                <h4 className="text-2xl font-semibold text-blue-700">Nombre de la técnica</h4>
                 <p>Comúnmente conocido como ciclo PDCA, un acrónimo en inglés de <strong>Plan (planificar)</strong>, <strong>Do (hacer)</strong>, <strong>Check (verificar)</strong> y <strong>Act/Adjust (actuar o ajustar)</strong>. También es referido como ciclo de Deming o ciclo de Shewhart.</p>
             </section>
 
             <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-blue-700">Descripción general</h2>
+                <h4 className="text-2xl font-semibold text-blue-700">Descripción general</h4>
                 <p>
                     El ciclo PDCA es una metodología de gestión orientada a la mejora continua de procesos en organizaciones que producen bienes y servicios.
                     Fue presentado inicialmente por el Dr. Walter Shewhart en 1939, y más tarde popularizado por el Dr. W. Edwards Deming.
@@ -23,7 +23,7 @@ function Pdca() {
             </section>
 
             <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-blue-700">Ámbitos de aplicación</h2>
+                <h4 className="text-2xl font-semibold text-blue-700">Ámbitos de aplicación</h4>
                 <ul className="list-disc list-inside space-y-1">
                     <li><strong>Industria manufacturera:</strong> Mejora de eficiencia, reducción de defectos, calidad del producto.</li>
                     <li><strong>Servicios:</strong> Bancos, hospitales, restaurantes: satisfacción del cliente y procesos internos.</li>
@@ -34,10 +34,10 @@ function Pdca() {
             </section>
 
             <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-blue-700">Procedimientos o pasos</h2>
+                <h4 className="text-2xl font-semibold text-blue-700">Procedimientos o pasos</h4>
 
                 <div className="ml-4">
-                    <h3 className="text-xl font-bold mt-4 text-blue-600">P: Plan (Planificar)</h3>
+                    <h5 className="text-xl font-bold mt-4 text-blue-600">P: Plan (Planificar)</h5>
                     <p>Se identifican problemas y oportunidades de mejora. Se definen objetivos y metas SMART, KPIs, recursos, cronograma, riesgos, criterios de éxito y responsables.</p>
 
                     <h3 className="text-xl font-bold mt-4 text-blue-600">D: Do (Hacer)</h3>
@@ -52,7 +52,7 @@ function Pdca() {
             </section>
 
             <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-blue-700">Ejemplo de aplicación</h2>
+                <h4 className="text-2xl font-semibold text-blue-700">Ejemplo de aplicación</h4>
                 <p>En una fábrica de muebles que produce armarios, se detecta que una máquina provoca errores y retrasos. Aplicando PDCA:</p>
                 <ol className="list-decimal list-inside ml-4 mt-2 space-y-1">
                     <li><strong>Plan:</strong> Se planea reemplazar una máquina propensa a fallos por una moderna.</li>

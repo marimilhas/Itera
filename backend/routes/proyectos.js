@@ -5,7 +5,7 @@ const db = require("../base-orm/sequelize-init");
 const auth = require("../middleware/auth");
 
 router.get("/api/proyectos", async function (req, res) {
-    let where = { activo: true };
+    let where = { };
 
     if (req.query.nombre != undefined && req.query.nombre !== "") {
         where.nombre = {
@@ -13,9 +13,13 @@ router.get("/api/proyectos", async function (req, res) {
         };
     }
 
+    if (req.query.activo != undefined && req.query.activo !== "") {
+        where.activo = req.query.activo === "true";
+    }
+
     if (!req.query.pagina) {
         const { count, rows } = await db.Proyecto.findAndCountAll({
-            attributes: ["id", "nombre", "descripcion"],
+            attributes: ["id", "nombre", "descripcion", "activo"],
             order: [["id", "ASC"]],
             where,
         });
@@ -25,7 +29,7 @@ router.get("/api/proyectos", async function (req, res) {
     const pagina = parseInt(req.query.pagina);
     const tamañoPagina = 10;
     const { count, rows } = await db.Proyecto.findAndCountAll({
-        attributes: ["id", "nombre", "descripcion"],
+        attributes: ["id", "nombre", "descripcion", "activo"],
         order: [["id", "ASC"]],
         where,
         offset: (pagina - 1) * tamañoPagina,
@@ -37,14 +41,15 @@ router.get("/api/proyectos", async function (req, res) {
 
 router.get("/api/proyectos/:id", auth.authenticateJWT, async function (req, res) {
     const { rol } = res.locals.user;
+    console.log("User role:", res.locals.user.rol);
     if (rol !== "admin") {
         return res.status(403).json({ message: "Usuario no autorizado" });
     }
 
     try {
         let data = await db.Proyecto.findOne({
-            attributes: ["id", "nombre", "descripcion"],
-            where: { id: req.params.id, activo: true },
+            attributes: ["id", "nombre", "descripcion", "activo"],
+            
         });
 
         if (!data) {
@@ -93,8 +98,7 @@ router.put("/api/proyectos/:id", auth.authenticateJWT, async (req, res) => {
 
     try {
         let data = await db.Proyecto.findOne({
-            attributes: ["id", "nombre", "descripcion"],
-            where: { id: req.params.id, activo: true },
+            attributes: ["id", "nombre", "descripcion"]
         });
 
         if (!data) {
@@ -126,24 +130,30 @@ router.delete("/api/proyectos/:id", auth.authenticateJWT, async (req, res) => {
         return res.status(403).json({ message: "Usuario no autorizado" });
     }
 
-    try {
-        let data = await db.Proyecto.findOne({
-            where: { id: req.params.id, activo: true },
-        });
+    const { id } = req.params;
+    const bajaFisica = req.query.bajaFisica === "true";
 
-        if (!data) {
-            res.status(404).json({ message: "Proyecto no encontrado" });
-            return;
+    try {
+        const proyecto = await db.Proyecto.findOne({ where: { id } });
+
+        if (!proyecto) {
+            return res.status(404).json({ message: "Proyecto no encontrado" });
         }
 
-        data.activo = false;
-        await data.save();
-
-        res.status(200).json({ message: "Proyecto eliminado correctamente" });
-
+        if (bajaFisica) {
+            await proyecto.destroy();
+            return res.status(200).json({ message: "Proyecto eliminado físicamente" });
+        } else {
+            // Alternar valor de activo
+            proyecto.activo = !proyecto.activo;
+            await proyecto.save();
+            const estado = proyecto.activo ? "activado" : "desactivado";
+            return res.status(200).json({ message: `Proyecto ${estado} correctamente` });
+        }
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 });
+
 
 module.exports = router;

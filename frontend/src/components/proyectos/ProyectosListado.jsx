@@ -26,10 +26,10 @@ export default function ProyectosListado({
                 <tbody>
                     {Proyectos &&
                         Proyectos.map((Proyecto) => (
-                            <tr key={Proyecto.IdProyecto}>
-                                <td style={{ textAlign: 'left' }}>{Proyecto.Nombre}</td>
-                                <td style={{ textAlign: 'left' }}>{Proyecto.Descripcion}</td>
-                                <td>{Proyecto.Activo ? "SI" : "NO"}</td>
+                            <tr key={Proyecto.id}>
+                                <td style={{ textAlign: 'left' }}>{Proyecto.nombre}</td>
+                                <td style={{ textAlign: 'left' }}>{Proyecto.descripcion}</td>
+                                <td>{Proyecto.activo ? "SI" : "NO"}</td>
                                 <td className="text-nowrap acciones">
                                     <button
                                         className="btn btn-sm btn-outline-primary"
@@ -48,22 +48,22 @@ export default function ProyectosListado({
                                     <button
                                         className={
                                             "btn btn-sm " +
-                                            (Proyecto.Activo
+                                            (Proyecto.activo
                                                 ? "btn btn-outline-warning"
                                                 : "btn-outline-success")
                                         }
-                                        title={Proyecto.Activo ? "Desactivar" : "Activar"}
+                                        title={Proyecto.activo ? "Desactivar" : "Activar"}
                                         onClick={() => ActivarDesactivar(Proyecto)}
                                     >
                                         <i
-                                            className={"fa fa-" + (Proyecto.Activo ? "times" : "check")}
+                                            className={"fa fa-" + (Proyecto.activo ? "times" : "check")}
                                         ></i>
                                     </button>
                                     <button
                                         className="btn btn-sm btn-outline-danger"
                                         title="Eliminar"
                                         onClick={() => Eliminar(Proyecto)}
-                                        disabled={Proyecto.Activo}
+                                        disabled={Proyecto.activo}
                                     >
                                         <i className="fa-solid fa-trash"></i>
                                     </button>

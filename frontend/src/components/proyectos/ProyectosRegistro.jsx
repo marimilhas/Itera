@@ -22,14 +22,14 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                     {/* Campo Nombre */}
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Nombre">
+                            <label className="col-form-label" htmlFor="nombre">
                                 Nombre{AccionABMC !== "C" && <span className="text-danger">*</span>}:
                             </label>
                         </div>
                         <div className="col-sm-8 col-md-6">
                             <input
                                 type="text"
-                                {...register("Nombre", {
+                                {...register("nombre", {
                                     required: { value: true, message: "El nombre es requerido" },
                                     minLength: {
                                         value: 5,
@@ -42,12 +42,12 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                                 })}
                                 autoFocus
                                 className={
-                                    "form-control " + (errors?.Nombre ? "is-invalid" : "")
+                                    "form-control " + (errors?.nombre ? "is-invalid" : "")
                                 }
                             />
-                            {errors?.Nombre && (
+                            {errors?.nombre && (
                                 <div className="invalid-feedback">
-                                    {errors?.Nombre?.message}
+                                    {errors?.nombre?.message}
                                 </div>
                             )}
                         </div>
@@ -56,14 +56,14 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                     {/* Campo Descripción */}
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Descripcion">
+                            <label className="col-form-label" htmlFor="descripcion">
                                 Descripción{AccionABMC !== "C" && <span className="text-danger">*</span>}:
                             </label>
                         </div>
                         <div className="col-sm-8 col-md-6">
                             <input
                                 type="text"
-                                {...register("Descripcion", {
+                                {...register("descripcion", {
                                     required: { value: true, message: "La descripción es requerida" },
                                     minLength: {
                                         value: 10,
@@ -75,18 +75,19 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                                     },
                                 })}
                                 className={
-                                    "form-control " + (errors?.Descripcion ? "is-invalid" : "")
+                                    "form-control " + (errors?.descripcion ? "is-invalid" : "")
                                 }
                             />
-                            {errors?.Descripcion && (
+                            {errors?.descripcion && (
                                 <div className="invalid-feedback">
-                                    {errors?.Descripcion?.message}
+                                    {errors?.descripcion?.message}
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Campo FechaInicio */}
+
+                    {/* Campo FechaInicio
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
                             <label className="col-form-label" htmlFor="FechaInicio">
@@ -109,7 +110,7 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                         </div>
                     </div>
 
-                    {/* Campo FechaFin */}
+                    {/* Campo FechaFin 
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
                             <label className="col-form-label" htmlFor="FechaFin">
@@ -139,7 +140,7 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                         </div>
                     </div>
 
-                    {/* Campo Presupuesto */}
+                    {/* Campo Presupuesto 
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
                             <label className="col-form-label" htmlFor="Presupuesto">
@@ -166,23 +167,23 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                             />
                             <div className="invalid-feedback">{errors?.Presupuesto?.message}</div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Campo Activo */}
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Activo">
+                            <label className="col-form-label" htmlFor="activo">
                                 Activo{AccionABMC !== "C" && <span className="text-danger">*</span>}:
                             </label>
                         </div>
                         <div className="col-sm-8 col-md-6">
                             <select
-                                name="Activo"
-                                {...register("Activo", {
+                                name="activo"
+                                {...register("activo", {
                                     required: { value: true, message: "El estado del proyecto es requerido" },
                                 })}
                                 className={
-                                    "form-control" + (errors?.Activo ? " is-invalid" : "")
+                                    "form-control" + (errors?.activo ? " is-invalid" : "")
                                 }
                                 disabled
                             >
@@ -190,7 +191,7 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                                 <option value={false}>NO</option>
                                 <option value={true}>SI</option>
                             </select>
-                            <div className="invalid-feedback">{errors?.Activo?.message}</div>
+                            <div className="invalid-feedback">{errors?.activo?.message}</div>
                         </div>
                     </div>
 

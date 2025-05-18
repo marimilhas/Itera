@@ -3,57 +3,48 @@ import moment from "moment";
 import CiclosBuscar from "./CiclosBuscar";
 import CiclosListado from "./CiclosListado";
 import CiclosRegistro from "./CiclosRegistro";
+import { ciclosService } from "../../services/ciclos.service";
 import { proyectosService } from "../../services/proyectos.service";
 import modalDialogService from "../../services/modalDialog.service";
-//import { asignacionesService } from "../../services/asignaciones.service";
-//import { tareasService } from "../../services/tareas.service";
+
 
 function Ciclos() {
     const TituloAccionABMC = {
-        A: "Registrar Proyecto",
-        B: "Eliminar Proyecto",
-        M: "Modificar Proyecto",
-        C: "Consultar Proyecto",
-        L: "Proyectos",
+        A: "Registrar Ciclo",
+        B: "Eliminar Ciclo",
+        M: "Modificar Ciclo",
+        C: "Consultar Ciclo",
+        L: "Ciclos",
     };
     const [AccionABMC, setAccionABMC] = useState("L");
 
-    const [Nombre, setNombre] = useState("");
+    const [Proyecto, setProyecto] = useState("");
     const [Activo, setActivo] = useState("");
 
-    const [Proyectos, setProyectos] = useState(null);
-    const [Proyecto, setProyecto] = useState(null); 
+    const [Ciclos, setCiclos] = useState(null);
+    const [Ciclo, setCiclo] = useState(null); 
     const [RegistrosTotal, setRegistrosTotal] = useState(0);
     const [Pagina, setPagina] = useState(1);
     const [Paginas, setPaginas] = useState([]);
 
-    const [Asignaciones, setAsignaciones] = useState([]);
-    const [Tareas, setTareas] = useState([]);
+    const [ProyectosDisponibles, setProyectosDisponibles] = useState([]);
+    //const [Asignaciones, setAsignaciones] = useState([]);
+    //const [Tareas, setTareas] = useState([]);
 
-    /*
+    
     useEffect(() => {
-        async function BuscarAsignaciones() {
+        async function cargarProyectos() {
             try {
-                let data = await asignacionesService.Buscar();
-                setAsignaciones(data.Asignaciones);
+                const data = await proyectosService.Buscar();
+                setProyectosDisponibles(data.Proyectos || []);
             } catch (error) {
-                console.error("Error al buscar asignaciones:", error);
+                console.error("Error al cargar proyectos:", error);
             }
-        }
+        } 
 
-        async function BuscarTareas() {
-            try {
-                let data = await tareasService.Buscar();
-                setTareas(data.Tareas);
-            } catch (error) {
-                console.error("Error al buscar tareas:", error);
-            }
-        }
-
-        BuscarAsignaciones();
-        BuscarTareas();
+        cargarProyectos();
     }, []);
-    */
+    
     
     async function Buscar(_pagina) {
         if (_pagina && _pagina !== Pagina) {
@@ -63,8 +54,8 @@ function Ciclos() {
             _pagina = Pagina;
         }
 
-        const data = await proyectosService.Buscar(Nombre, Activo, _pagina);
-        setProyectos(data.Proyectos);
+        const data = await ciclosService.Buscar(Proyecto, Activo, _pagina);
+        setCiclos(data.Ciclos);
         setRegistrosTotal(data.RegistrosTotal);
 
         const arrPaginas = [];
@@ -74,28 +65,28 @@ function Ciclos() {
         setPaginas(arrPaginas);
     }
 
-    async function BuscarPorId(proyecto, accionABMC) {
-        const data = await proyectosService.BuscarPorId(proyecto);
-        setProyecto(data);
+    async function BuscarPorId(ciclo, accionABMC) {
+        const data = await ciclosService.BuscarPorId(ciclo);
+        setCiclo(data);
         setAccionABMC(accionABMC);
     }
 
 
-    function Consultar(proyecto) {
-        BuscarPorId(proyecto, "C"); 
+    function Consultar(ciclo) {
+        BuscarPorId(ciclo, "C"); 
     }
 
-    function Modificar(proyecto) {
-        if (!proyecto.Activo) {
+    function Modificar(ciclo) {
+        if (!ciclo.activo) {
             modalDialogService.Alert("No puede modificarse un registro Inactivo.");
             return;
         }
-        BuscarPorId(proyecto, "M"); 
+        BuscarPorId(ciclo, "M"); 
     }
 
     async function Agregar() {
         setAccionABMC("A");
-        setProyecto({
+        setCiclo({
             IdProyecto: 0,
             Nombre: "",
             Descripcion: "",
@@ -107,24 +98,16 @@ function Ciclos() {
         modalDialogService.Alert("Preparando el alta...");
     }
 
-    async function ActivarDesactivar(proyecto) {
-        const asignacionesActivas = Asignaciones.filter(asignacion => asignacion.IdProyecto === proyecto.IdProyecto && asignacion.Activo);
-        const tareasActivas = Tareas.filter(tarea => tarea.IdProyecto === proyecto.IdProyecto && tarea.Activo);
-
-        if (asignacionesActivas.length > 0 || tareasActivas.length > 0) {
-            modalDialogService.Alert("No se puede desactivar un proyecto con tareas o asignaciones activas.");
-            return;
-        }
-
+    async function ActivarDesactivar(ciclo) {
         modalDialogService.Confirm(
             "¿Está seguro que quiere " +
-            (proyecto.Activo ? "desactivar" : "activar") +
-            " el proyecto?",
+            (ciclo.activo ? "desactivar" : "activar") +
+            " el ciclo?",
             undefined,
             undefined,
             undefined,
             async () => {
-                await proyectosService.ActivarDesactivar(proyecto);
+                await ciclosService.ActivarDesactivar(ciclo);
                 await Buscar();
             }
         );
@@ -151,9 +134,9 @@ function Ciclos() {
         );
     }
 
-    async function Grabar(proyecto) {
+    async function Grabar(ciclo) {
         try {
-            await proyectosService.Grabar(proyecto);
+            await ciclosService.Grabar(ciclo);
         }
         catch (error) {
             modalDialogService.Alert(error?.response?.data?.message ?? error.toString())
@@ -182,18 +165,18 @@ function Ciclos() {
             </div>
 
             {AccionABMC === "L" && <CiclosBuscar
-                Nombre={Nombre}
-                setNombre={setNombre}
+                Proyecto={Proyecto}
+                setProyecto={setProyecto}
                 Activo={Activo}
                 setActivo={setActivo}
                 Buscar={Buscar}
-            />
-            } 
+                proyectos={ProyectosDisponibles}
+            />}
 
-            {AccionABMC === "L" && Proyectos?.length > 0 &&
+            {AccionABMC === "L" && Ciclos?.length > 0 &&
                 <CiclosListado
                     {...{
-                        Proyectos,
+                        Ciclos,
                         Consultar,
                         Modificar,
                         ActivarDesactivar,
@@ -203,11 +186,12 @@ function Ciclos() {
                         RegistrosTotal,
                         Paginas,
                         Buscar,
+                        ProyectosDisponibles
                     }}
                 />
             }
 
-            {AccionABMC === "L" && Proyectos?.length === 0 &&
+            {AccionABMC === "L" && Ciclos?.length === 0 &&
                 <div className="alert alert-info mensajesAlert">
                     <i className="fa fa-exclamation-sign"></i>
                     No se encontraron registros...
@@ -216,7 +200,7 @@ function Ciclos() {
 
             {AccionABMC !== "L" &&
                 <CiclosRegistro
-                    {...{ AccionABMC, Proyecto, Grabar, Volver }}
+                    {...{ AccionABMC, Ciclo, ProyectosDisponibles, Grabar, Volver }}
                 />
             }
 

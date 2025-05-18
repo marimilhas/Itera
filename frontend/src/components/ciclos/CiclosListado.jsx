@@ -1,7 +1,7 @@
 import React from "react";
 
-export default function ProyectosListado({
-    Proyectos,
+export default function CiclosListado({
+    Ciclos,
     Consultar,
     Modificar,
     ActivarDesactivar,
@@ -11,59 +11,74 @@ export default function ProyectosListado({
     RegistrosTotal,
     Paginas,
     Buscar,
-}) {
+    ProyectosDisponibles
+})
+{
+    const obtenerNombreProyecto = (idProyecto) => {
+        const proyecto = ProyectosDisponibles.find(p => p.id === idProyecto);
+        return proyecto?.nombre ?? "Proyecto desconocido";
+    };
+
     return (
         <div className="table-responsive">
             <table className="table table-hover table-sm table-bordered">
                 <thead>
                     <tr className="table-light">
-                        <th className="text-center">Nombre</th>
-                        <th className="text-center">Descripción</th>
+                        <th className="text-center">Proyecto</th>
+                        <th className="text-center">Número de ciclo</th>
+                        {/* <th className="text-center">Plan</th>
+                        <th className="text-center">Do</th>
+                        <th className="text-center">Check</th>
+                        <th className="text-center">Act</th> */}
                         <th className="text-center">Activo</th>
                         <th className="text-center text-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {Proyectos &&
-                        Proyectos.map((Proyecto) => (
-                            <tr key={Proyecto.IdProyecto}>
-                                <td style={{ textAlign: 'left' }}>{Proyecto.Nombre}</td>
-                                <td style={{ textAlign: 'left' }}>{Proyecto.Descripcion}</td>
-                                <td>{Proyecto.Activo ? "SI" : "NO"}</td>
+                    {Ciclos &&
+                        Ciclos.map((Ciclo) => (
+                            <tr key={Ciclo.id}>
+                                <td style={{ textAlign: 'left' }}>{obtenerNombreProyecto(Ciclo.idProyecto)}</td>
+                                <td style={{ textAlign: 'left' }}>{Ciclo.numeroCiclo}</td>
+                                {/* <td style={{ textAlign: 'left' }}>{Ciclo.plan}</td>
+                                <td style={{ textAlign: 'left' }}>{Ciclo.do}</td>
+                                <td style={{ textAlign: 'left' }}>{Ciclo.check}</td>
+                                <td style={{ textAlign: 'left' }}>{Ciclo.act}</td> */}
+                                <td>{Ciclo.activo ? "SI" : "NO"}</td>
                                 <td className="text-nowrap acciones">
                                     <button
                                         className="btn btn-sm btn-outline-primary"
                                         title="Consultar"
-                                        onClick={() => Consultar(Proyecto)}
+                                        onClick={() => Consultar(Ciclo)}
                                     >
                                         <i className="fa-solid fa-eye"></i>
                                     </button>
                                     <button
                                         className="btn btn-sm btn-outline-secondary"
                                         title="Modificar"
-                                        onClick={() => Modificar(Proyecto)}
+                                        onClick={() => Modificar(Ciclo)}
                                     >
                                         <i className="fa-solid fa-gear"></i>
                                     </button>
                                     <button
                                         className={
                                             "btn btn-sm " +
-                                            (Proyecto.Activo
+                                            (Ciclo.activo
                                                 ? "btn btn-outline-warning"
                                                 : "btn-outline-success")
                                         }
-                                        title={Proyecto.Activo ? "Desactivar" : "Activar"}
-                                        onClick={() => ActivarDesactivar(Proyecto)}
+                                        title={Ciclo.activo ? "Desactivar" : "Activar"}
+                                        onClick={() => ActivarDesactivar(Ciclo)}
                                     >
                                         <i
-                                            className={"fa fa-" + (Proyecto.Activo ? "times" : "check")}
+                                            className={"fa fa-" + (Ciclo.activo ? "times" : "check")}
                                         ></i>
                                     </button>
                                     <button
                                         className="btn btn-sm btn-outline-danger"
                                         title="Eliminar"
-                                        onClick={() => Eliminar(Proyecto)}
-                                        disabled={Proyecto.Activo}
+                                        onClick={() => Eliminar(Ciclo)}
+                                        disabled={Ciclo.activo}
                                     >
                                         <i className="fa-solid fa-trash"></i>
                                     </button>

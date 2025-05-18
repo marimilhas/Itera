@@ -27,8 +27,8 @@ function Proyectos() {
     const [Pagina, setPagina] = useState(1);
     const [Paginas, setPaginas] = useState([]);
 
-    const [Asignaciones, setAsignaciones] = useState([]);
-    const [Tareas, setTareas] = useState([]);
+    //const [Asignaciones, setAsignaciones] = useState([]);
+    //const [Tareas, setTareas] = useState([]);
 
     /*
     useEffect(() => {
@@ -86,7 +86,7 @@ function Proyectos() {
     }
 
     function Modificar(proyecto) {
-        if (!proyecto.Activo) {
+        if (!proyecto.activo) {
             modalDialogService.Alert("No puede modificarse un registro Inactivo.");
             return;
         }
@@ -108,17 +108,17 @@ function Proyectos() {
     }
 
     async function ActivarDesactivar(proyecto) {
-        const asignacionesActivas = Asignaciones.filter(asignacion => asignacion.IdProyecto === proyecto.IdProyecto && asignacion.Activo);
-        const tareasActivas = Tareas.filter(tarea => tarea.IdProyecto === proyecto.IdProyecto && tarea.Activo);
+        // const asignacionesActivas = Asignaciones.filter(asignacion => asignacion.id === proyecto.id && asignacion.Activo);
+        // const tareasActivas = Tareas.filter(tarea => tarea.IdProyecto === proyecto.IdProyecto && tarea.Activo);
 
-        if (asignacionesActivas.length > 0 || tareasActivas.length > 0) {
-            modalDialogService.Alert("No se puede desactivar un proyecto con tareas o asignaciones activas.");
-            return;
-        }
+        // if (asignacionesActivas.length > 0 || tareasActivas.length > 0) {
+        //     modalDialogService.Alert("No se puede desactivar un proyecto con tareas o asignaciones activas.");
+        //     return;
+        // }
 
         modalDialogService.Confirm(
             "¿Está seguro que quiere " +
-            (proyecto.Activo ? "desactivar" : "activar") +
+            (proyecto.activo ? "desactivar" : "activar") +
             " el proyecto?",
             undefined,
             undefined,

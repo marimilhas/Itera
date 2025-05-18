@@ -2,33 +2,33 @@ import { config } from "../config/config";
 import httpService from "./http.service";
 const urlResource = config.urlResourceCiclos;
 
-async function Buscar(Nombre, Activo, Pagina) {
+async function Buscar(idProyecto, activo, pagina) {
     const resp = await httpService.get(urlResource, {
-        params: { Nombre, Activo, Pagina },
+        params: { idProyecto, activo, pagina },
     });
     return resp.data;
 }
 
-async function BuscarPorId(proyecto) {
-    const resp = await httpService.get(urlResource + "/" + proyecto.IdProyecto);
+async function BuscarPorId(ciclo) {
+    const resp = await httpService.get(urlResource + "/" + ciclo.id);
     return resp.data;
 }
 
-async function ActivarDesactivar(proyecto) {
-    await httpService.delete(urlResource + "/" + proyecto.IdProyecto + "?bajaFisica=false");
+async function ActivarDesactivar(ciclo) {
+    await httpService.delete(urlResource + "/" + ciclo.id + "?bajaFisica=false");
 }
 
-async function Eliminar(proyecto) {
-    await httpService.delete(urlResource + "/" + proyecto.IdProyecto + "?bajaFisica=true");
+async function Eliminar(ciclo) {
+    await httpService.delete(urlResource + "/" + ciclo.id + "?bajaFisica=true");
 }
 
-async function Grabar(proyecto) {
-    if (proyecto.IdProyecto === 0) {
-        await httpService.post(urlResource, proyecto);
+async function Grabar(ciclo) {
+    if (ciclo.id === 0) {
+        await httpService.post(urlResource, ciclo);
     } else {
-        await httpService.put(urlResource + "/" + proyecto.IdProyecto, proyecto);
+        await httpService.put(urlResource + "/" + ciclo.id, ciclo);
     }
 }
-export const proyectosService = {
+export const ciclosService = {
     Buscar, BuscarPorId, ActivarDesactivar, Eliminar, Grabar
 };

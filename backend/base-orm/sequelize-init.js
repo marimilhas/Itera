@@ -136,6 +136,9 @@ const Ciclo = sequelize.define(
                 }
             }
         },
+        numeroCiclo: {
+            type: DataTypes.INTEGER
+        },
         plan: {
             type: DataTypes.STRING(100),
             allowNull: true,
@@ -151,9 +154,6 @@ const Ciclo = sequelize.define(
         act: {
             type: DataTypes.STRING(100),
             allowNull: true,
-        },
-        fechaCreacion: {
-            type: DataTypes.STRING(20),
         },
         activo: {
             type: DataTypes.BOOLEAN,

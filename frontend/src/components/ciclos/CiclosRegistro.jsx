@@ -2,13 +2,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import moment from 'moment';
 
-export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver }) {
+export default function CiclosRegistro({ AccionABMC, Ciclo, ProyectosDisponibles, Grabar, Volver }) {
     const {
         register,
         handleSubmit,
         formState: { errors, isValid, isSubmitted },
         getValues
-    } = useForm({ values: Proyecto });
+    } = useForm({ values: Ciclo });
 
     const onSubmit = (data) => {
         Grabar(data);
@@ -19,170 +19,135 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
             <div className="container-fluid">
                 <fieldset disabled={AccionABMC === "C"}>
 
-                    {/* Campo Nombre */}
+                    {/* Número de Ciclo */}
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Nombre">
-                                Nombre{AccionABMC !== "C" && <span className="text-danger">*</span>}:
-                            </label>
-                        </div>
-                        <div className="col-sm-8 col-md-6">
-                            <input
-                                type="text"
-                                {...register("Nombre", {
-                                    required: { value: true, message: "El nombre es requerido" },
-                                    minLength: {
-                                        value: 5,
-                                        message: "El nombre debe tener al menos 5 caracteres",
-                                    },
-                                    maxLength: {
-                                        value: 50,
-                                        message: "El nombre debe tener como máximo 50 caracteres",
-                                    },
-                                })}
-                                autoFocus
-                                className={
-                                    "form-control " + (errors?.Nombre ? "is-invalid" : "")
-                                }
-                            />
-                            {errors?.Nombre && (
-                                <div className="invalid-feedback">
-                                    {errors?.Nombre?.message}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Campo Descripción */}
-                    <div className="row">
-                        <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Descripcion">
-                                Descripción{AccionABMC !== "C" && <span className="text-danger">*</span>}:
-                            </label>
-                        </div>
-                        <div className="col-sm-8 col-md-6">
-                            <input
-                                type="text"
-                                {...register("Descripcion", {
-                                    required: { value: true, message: "La descripción es requerida" },
-                                    minLength: {
-                                        value: 10,
-                                        message: "La descripción debe tener al menos 10 caracteres",
-                                    },
-                                    maxLength: {
-                                        value: 100,
-                                        message: "La descripción debe tener como máximo 100 caracteres",
-                                    },
-                                })}
-                                className={
-                                    "form-control " + (errors?.Descripcion ? "is-invalid" : "")
-                                }
-                            />
-                            {errors?.Descripcion && (
-                                <div className="invalid-feedback">
-                                    {errors?.Descripcion?.message}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Campo FechaInicio */}
-                    <div className="row">
-                        <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="FechaInicio">
-                                Fecha Inicio{AccionABMC !== "C" && <span className="text-danger">*</span>}:
-                            </label>
-                        </div>
-                        <div className="col-sm-8 col-md-6">
-                            <input
-                                type="date"
-                                {...register("FechaInicio", {
-                                    required: { value: true, message: "La fecha de inicio es requerida" }
-                                })}
-                                className={
-                                    "form-control " + (errors?.FechaInicio ? "is-invalid" : "")
-                                }
-                            />
-                            <div className="invalid-feedback">
-                                {errors?.FechaInicio?.message}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Campo FechaFin */}
-                    <div className="row">
-                        <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="FechaFin">
-                                Fecha Fin:
-                            </label>
-                        </div>
-                        <div className="col-sm-8 col-md-6">
-                            <input
-                                type="date"
-                                {...register("FechaFin", {
-                                    validate: {
-                                        fechaMayor: (value) => {
-                                            if (!value) return true; // Permitir valor nulo (fecha opcional)
-                                            const fechaInicio = getValues("FechaInicio");
-                                            return moment(value).isSameOrAfter(moment(fechaInicio)) ||
-                                                "La fecha de fin debe ser mayor o igual a la fecha de inicio";
-                                        },
-                                    },
-                                })}
-                                className={"form-control " + (errors?.FechaFin ? "is-invalid" : "")}
-                            />
-                            {errors?.FechaFin && (
-                                <div className="invalid-feedback">
-                                    {errors?.FechaFin?.message}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Campo Presupuesto */}
-                    <div className="row">
-                        <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Presupuesto">
-                                Presupuesto:
-                            </label>
+                            <label className="col-form-label">Número de Ciclo<span className="text-danger">*</span>:</label>
                         </div>
                         <div className="col-sm-8 col-md-6">
                             <input
                                 type="number"
-                                step=".01"
-                                {...register("Presupuesto", {
-                                    min: {
-                                        value: 0.01,
-                                        message: "El presupuesto debe ser mayor a 0",
-                                    },
-                                    max: {
-                                        value: 99999999.99,
-                                        message: "El presupuesto debe ser menor o igual a 99999999.99",
-                                    },
+                                {...register("numeroCiclo", {
+                                    required: "El número de ciclo es obligatorio",
+                                    min: { value: 1, message: "Debe ser mayor a 0" }
                                 })}
-                                className={
-                                    "form-control " + (errors?.Presupuesto ? "is-invalid" : "")
-                                }
+                                className={`form-control ${errors.numeroCiclo ? "is-invalid" : ""}`}
                             />
-                            <div className="invalid-feedback">{errors?.Presupuesto?.message}</div>
+                            <div className="invalid-feedback">{errors.numeroCiclo?.message}</div>
+                        </div>
+                    </div>
+
+                    {/* Proyecto (desplegable) */}
+                    <div className="row">
+                        <div className="col-sm-4 col-md-3 offset-md-1">
+                            <label className="col-form-label">Proyecto<span className="text-danger">*</span>:</label>
+                        </div>
+                        <div className="col-sm-8 col-md-6">
+                            <select
+                                {...register("idProyecto", {
+                                    required: "Debe seleccionar un proyecto"
+                                })}
+                                className={`form-control ${errors.idProyecto ? "is-invalid" : ""}`}
+                            >
+                                <option value=""> </option>
+                                {ProyectosDisponibles.map((p) => (
+                                    <option key={p.id} value={p.id}>{p.nombre}</option>
+                                ))}
+                            </select>
+                            <div className="invalid-feedback">{errors.idProyecto?.message}</div>
+                        </div>
+                    </div>
+
+                    {/* Plan */}
+                    <div className="row">
+                        <div className="col-sm-4 col-md-3 offset-md-1">
+                            <label className="col-form-label">Plan:</label>
+                        </div>
+                        <div className="col-sm-8 col-md-6">
+                            <input
+                                type="text"
+                                {...register("plan", {
+                                    minLength: { value: 5, message: "Mínimo 5 caracteres" }
+                                })}
+                                className={`form-control ${errors.plan ? "is-invalid" : ""}`}
+                            />
+                            {/* <textarea
+                                {...register("plan", {
+                                    minLength: { value: 5, message: "Mínimo 5 caracteres" }
+                                })}
+                                className={`form-control auto-expand ${errors.plan ? "is-invalid" : ""}`}
+                                rows={1}
+                            /> */}
+                            <div className="invalid-feedback">{errors.plan?.message}</div>
+                        </div>
+                    </div>
+
+                    {/* Do */}
+                    <div className="row">
+                        <div className="col-sm-4 col-md-3 offset-md-1">
+                            <label className="col-form-label">Do:</label>
+                        </div>
+                        <div className="col-sm-8 col-md-6">
+                            <input
+                                type="text"
+                                {...register("do", {
+                                    minLength: { value: 5, message: "Mínimo 5 caracteres" }
+                                })}
+                                className={"form-control " + (errors?.do ? "is-invalid" : "")}
+                            />
+                            <div className="invalid-feedback">{errors.do?.message}</div>
+                        </div>
+                    </div>
+
+                    {/* Check */}
+                    <div className="row">
+                        <div className="col-sm-4 col-md-3 offset-md-1">
+                            <label className="col-form-label">Check:</label>
+                        </div>
+                        <div className="col-sm-8 col-md-6">
+                            <input
+                                type="text"
+                                {...register("check", {
+                                    minLength: { value: 5, message: "Mínimo 5 caracteres" }
+                                })}
+                                className={`form-control ${errors.check ? "is-invalid" : ""}`}
+                            />
+                            <div className="invalid-feedback">{errors.check?.message}</div>
+                        </div>
+                    </div>
+
+                    {/* Act */}
+                    <div className="row">
+                        <div className="col-sm-4 col-md-3 offset-md-1">
+                            <label className="col-form-label">Act:</label>
+                        </div>
+                        <div className="col-sm-8 col-md-6">
+                            <input
+                                type="text"
+                                {...register("act", {
+                                    minLength: { value: 5, message: "Mínimo 5 caracteres" }
+                                })}
+                                className={`form-control ${errors.act ? "is-invalid" : ""}`}
+                            />
+                            <div className="invalid-feedback">{errors.act?.message}</div>
                         </div>
                     </div>
 
                     {/* Campo Activo */}
                     <div className="row">
                         <div className="col-sm-4 col-md-3 offset-md-1">
-                            <label className="col-form-label" htmlFor="Activo">
+                            <label className="col-form-label" htmlFor="activo">
                                 Activo{AccionABMC !== "C" && <span className="text-danger">*</span>}:
                             </label>
                         </div>
                         <div className="col-sm-8 col-md-6">
                             <select
-                                name="Activo"
-                                {...register("Activo", {
+                                name="activo"
+                                {...register("activo", {
                                     required: { value: true, message: "El estado del proyecto es requerido" },
                                 })}
                                 className={
-                                    "form-control" + (errors?.Activo ? " is-invalid" : "")
+                                    "form-control" + (errors?.activo ? " is-invalid" : "")
                                 }
                                 disabled
                             >
@@ -190,7 +155,7 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                                 <option value={false}>NO</option>
                                 <option value={true}>SI</option>
                             </select>
-                            <div className="invalid-feedback">{errors?.Activo?.message}</div>
+                            <div className="invalid-feedback">{errors?.activo?.message}</div>
                         </div>
                     </div>
 
@@ -212,7 +177,7 @@ export default function ProyectosRegistro({ AccionABMC, Proyecto, Grabar, Volver
                         <button
                             type="button"
                             className="btn"
-                            style={{ backgroundColor: "#00aeff", color: "white", fontWeight: 600}}
+                            style={{ backgroundColor: "#00aeff", color: "white", fontWeight: 600 }}
                             onClick={() => Volver()}
                         >
                             <i className="fa fa-undo"></i>
